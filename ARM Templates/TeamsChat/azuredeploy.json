@@ -157,8 +157,28 @@
               "endTime": "20029-04-28T15:50:27Z"			
             },
             "external": true
-          }
-        },
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "[variables('outputMessageDatasetName')]",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('destinationLinkedServiceName')]"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "published": false,
+              "type": "AzureDataLakeStoreFile",
+              "linkedServiceName": {
+                "referenceName": "[variables('destinationLinkedServiceName')]",
+                "type": "LinkedServiceReference"
+              },
+              "typeProperties": {
+                "folderPath": "[variables('outputDataLakeStore').messagePath]"
+              }
+            }
+          },
         {
           "type": "pipelines",
           "name": "[variables('pipelineName')]",
