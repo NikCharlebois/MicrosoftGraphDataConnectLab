@@ -23,7 +23,7 @@
     }
   },
   "variables": {
-    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
