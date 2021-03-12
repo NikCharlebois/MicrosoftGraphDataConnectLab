@@ -161,7 +161,7 @@
           },
           {
             "type": "datasets",
-            "name": "[variables('outputMessageDatasetName')]",
+            "name": "[variables('outputTeamsChatDatasetName')]",
             "dependsOn": [
               "[variables('dataFactoryName')]",
               "[variables('destinationLinkedServiceName')]"
