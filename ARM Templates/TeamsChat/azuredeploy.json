@@ -1,115 +1,254 @@
 {
-  "$schema":"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion":"1.0.0.0",
-  "parameters":{
-    "factoryName":{
-      "type":"string",
-      "metadata":"Data Factory name"
-    },
-    "Office365_Data":{
-      "type":"string"
-    },
-    "AzureDataLakeStorage":{
-      "type":"string"
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "AzureADAppId": {
+      "type": "string",
+      "metadata": {
+        "description": "The id of the service principal that has access to the destination Data Lake store."
       }
     },
-    "variables":{
-      "factoryId":"[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    "AzureADAppSecret": {
+      "type": "string",
+      "metadata": {
+        "description": "The key of the service principal that has access to the destination Data Lake store."
+      }
     },
-    "resources":[
-      {
-        "name":"[concat(parameters('factoryName'), '/Pump-O365-Data')]",
-        "type":"Microsoft.DataFactory/factories/pipelines",
-        "apiVersion":"2018-06-01",
-        "properties":{
-          "activities":[
-            {
-              "name":"Pump it Out",
-              "type":"Copy",
-              "dependsOn":[],
-              "policy":{
-                "timeout":"7.00:00:00",
-                "retry":0,
-                "retryIntervalInSeconds":30,
-                "secureOutput":false,
-                "secureInput":false
-              },
-              "userProperties":[],
-              "typeProperties":{
-                "source":{
-                  "dateFilterColumn":"createdDateTime",
-                  "startTime":"2019-01-01T00:00:00.000Z",
-                  "endTime":"2021-03-12T00:00:00.000Z",
-                  "userScopeFilterUri":"",
-                  "outputColumns":[
-                      {"name":"receivedDateTime"},
-                      {"name":"sentDateTime"}
-                  ]
-                },
-                "sink":{
-                  "type":"BinarySink",
-                  "storeSettings":{
-                    "type":"AzureBlobFSWriteSettings"
-                  }
-                },
-                "enableStaging":false
-              },
-              "inputs":[
-                {
-                  "referenceName":"All_Messages",
-                  "type":"DatasetReference",
-                  "parameters":{}
-                }
-              ],
-              "outputs":[
-                {
-                  "referenceName":"DataLakev2",
-                  "type":"DatasetReference",
-                  "parameters":{}
-                }
-              ]
-            }
+    "allowedGroups": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
+      }
+    }
+  },
+  "variables": {
+    "dataFactoryName": "[concat('myadf', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "sourceLinkedServiceName": "SourceO365LinkedService",
+    "destinationLinkedServiceName": "DestinationADLSLinkedService",
+    "inputTeamsChatDatasetName": "TeamsChatDataset",
+    "outputTeamsChatDatasetName": "ADLSOutputMessageDataset",
+    "pipelineName": "M365 Simple Pipeline",
+    "triggerName": "Daily Trigger",
+    "outputDataLakeStore": {
+      "messagePath": "targetFolder/Message",
+      "eventPath": "targetFolder/Event",
+      "contactPath": "targetFolder/Contact",
+      "userPath": "targetFolder/User"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.DataLakeStore/accounts",
+      "name": "[variables('destinationAdlsAccountName')]",
+      "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-11-01",
+      "properties": {
+        "initialUser": "[parameters('AzureADAppId')]",
+        "newTier": "Consumption",
+        "encryptionState": "Enabled",
+        "encryptionConfig": {
+          "type": "ServiceManaged"
+        }
+      }
+    },
+    {
+      "name": "[variables('dataFactoryName')]",
+      "apiVersion": "2017-09-01-preview",
+      "type": "Microsoft.DataFactory/factories",
+      "comments": "Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS.",
+      "dependsOn": [
+        "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
+      ],
+      "location": "East US",
+      "resources": [
+        {
+          "type": "linkedservices",
+          "name": "[variables('sourceLinkedServiceName')]",
+          "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
           ],
-          "annotations":[],
-          "lastPublishTime":"2021-03-11T17:38:53Z"
-        },
-        "dependsOn":["[concat(variables('factoryId'), '/datasets/All_Messages')]","[concat(variables('factoryId'), '/datasets/DataLakev2')]"]
-      },
-      {
-        "name":"[concat(parameters('factoryName'), '/All_Messages')]",
-        "type":"Microsoft.DataFactory/factories/datasets",
-        "apiVersion":"2018-06-01",
-        "properties":{
-          "linkedServiceName":{
-            "referenceName":"[parameters('Office365_Data')]",
-            "type":"LinkedServiceReference"},
-            "annotations":[],
-            "type":"Office365Table",
-            "schema":[],
-            "typeProperties":{
-              "tableName":"BasicDataSet_v0.TeamChat_v0"
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "Office365",
+            "description": "Source O365 linked service",
+            "typeProperties": {
+              "office365tenantId": "[subscription().tenantId]",
+              "PrivacyPolicyUri": "http://www.wkw.com/privacy",
+              "TermsOfUseUri": "http://www.wkw.com/tos",
+              "servicePrincipalId": "[parameters('AzureADAppId')]",
+              "servicePrincipalKey": {
+                "type": "SecureString",
+                "value": "[parameters('AzureADAppSecret')]"
+              },
+              "servicePrincipalTenantId": "[subscription().tenantId]",
+              "allowedGroups": "[parameters('allowedGroups')]"
             }
-          },
-          "dependsOn":[]
+          }
         },
-        {"name":"[concat(parameters('factoryName'), '/DataLakev2')]",
-          "type":"Microsoft.DataFactory/factories/datasets",
-          "apiVersion":"2018-06-01",
-          "properties":{
-            "linkedServiceName":{
-              "referenceName":"[parameters('AzureDataLakeStorage')]",
-              "type":"LinkedServiceReference"
+        {
+          "type": "linkedservices",
+          "name": "[variables('destinationLinkedServiceName')]",
+          "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
+          "dependsOn": [
+            "[variables('dataFactoryName')]"
+          ],
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "AzureDataLakeStore",
+            "description": "Destination Azure Data Lake Store linked service",
+            "typeProperties": {
+              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
+              "servicePrincipalId": "[parameters('AzureADAppId')]",
+              "servicePrincipalKey": {
+                "type": "SecureString",
+                "value": "[parameters('AzureADAppSecret')]"
+              },
+              "tenant": "[subscription().tenantId]",
+              "resourceGroupName": "[resourceGroup().name]",
+              "subscriptionId": "[subscription().subscriptionId]"
+            }
+          }
+        },
+        {
+          "type": "datasets",
+          "name": "[variables('inputTeamsChatDatasetName')]",
+          "dependsOn": [
+            "[variables('dataFactoryName')]",
+            "[variables('sourceLinkedServiceName')]"
+          ],
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "published": false,
+            "type": "Office365Table",
+            "linkedServiceName": {
+              "referenceName": "[variables('sourceLinkedServiceName')]",
+              "type": "LinkedServiceReference"
             },
-            "annotations":[],
-            "type":"Binary",
-            "typeProperties":{
-              "location":{
-                "type":"AzureBlobFSLocation",
-                "fileSystem":"mgdccontainer"
+            "structure": [
+              {
+                "Name": "Importance",
+                "Type": "string"
+              },
+              {
+                "Name": "From",
+                "Type": "string"
+              },
+              {
+                "Name": "CreatedDateTime",
+                "Type": "datetime"
+              },
+              {
+                "Name": "Id",
+                "Type": "string"
+              },
+              {
+                "Name": "Attachments",
+                "Type": "string"
               }
-            }
-          },
-          "dependsOn":[]
+            ],
+            "typeProperties": {
+              "tableName": "BasicDataSet_v0.TeamChat_v0",
+              "dateFilterColumn": "CreatedDateTime", 
+              "startTime": "2016-10-28T15:50:27Z",
+              "endTime": "20029-04-28T15:50:27Z"			
+            },
+            "external": true
+          }
+        },
+        {
+          "type": "pipelines",
+          "name": "[variables('pipelineName')]",
+          "dependsOn": [
+            "[variables('dataFactoryName')]",
+            "[variables('sourceLinkedServiceName')]",
+            "[variables('destinationLinkedServiceName')]",
+            "[variables('inputTeamsChatDatasetName')]",
+            "[variables('outputTeamsChatDatasetName')]"
+          ],
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "activities": [
+              {
+                "name": "Copy Teams Chat Data",
+                "description": "Copy Teams chat data from O365 to Azure Data Lake Store",
+                "type": "Copy",
+                "inputs": [
+                  {
+                    "referenceName": "[variables('inputTeamsChatDatasetName')]",
+                    "type": "DatasetReference"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "referenceName": "[variables('outputTeamsChatDatasetName')]",
+                    "type": "DatasetReference"
+                  }
+                ],
+                "typeProperties": {
+                  "source": {
+                    "type": "Office365Source"
+                  },
+                  "sink": {
+                    "type": "AzureDataLakeStoreSink"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "triggers",
+          "name": "[variables('triggerName')]",
+          "dependsOn": [
+            "[variables('dataFactoryName')]",
+            "[variables('sourceLinkedServiceName')]",
+            "[variables('destinationLinkedServiceName')]",
+            "[variables('inputMessageDatasetName')]",
+            "[variables('outputMessageDatasetName')]",
+            "[variables('inputEventDatasetName')]",
+            "[variables('outputEventDatasetName')]",
+            "[variables('inputContactDatasetName')]",
+            "[variables('outputContactDatasetName')]",
+            "[variables('inputUserDatasetName')]",
+            "[variables('outputUserDatasetName')]",
+            "[variables('pipelineName')]"
+          ],
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "type": "ScheduleTrigger",
+            "typeProperties": {
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "2016-07-09T19:22:09.1440844Z",
+                "timeZone": "UTC"
+              }
+            },
+            "pipelines": [
+              {
+                "pipelineReference": {
+                  "type": "PipelineReference",
+                  "referenceName": "[variables('pipelineName')]"
+                },
+                "parameters": {}
+              }
+            ]
+          }
         }
       ]
-  }
+    },
+    {
+      "type": "Microsoft.DataFactory/factories/triggers/status",
+      "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
+      "apiVersion": "2017-09-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
+      ],
+      "properties": {}
+    }
+  ]
+}
