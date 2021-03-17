@@ -154,7 +154,7 @@
               "tableName": "BasicDataSet_v0.TeamChat_v0",
               "dateFilterColumn": "CreatedDateTime", 
               "startTime": "2016-10-28T15:50:27Z",
-              "endTime": "20029-04-28T15:50:27Z"			
+              "endTime": "2029-04-28T15:50:27Z"			
             },
             "external": true
             }
