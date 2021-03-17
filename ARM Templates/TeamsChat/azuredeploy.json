@@ -97,7 +97,10 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "Office365",
-            "connectVia": "[concat(variables('dataFactoryName'), '/AzureSelfHosted')]",
+            "connectVia": {
+                "referenceName": "AzureSelfHosted",
+                "type": "IntegrationRuntimeReference"
+            },
             "description": "Source O365 linked service",
             "typeProperties": {
               "office365tenantId": "[subscription().tenantId]",
