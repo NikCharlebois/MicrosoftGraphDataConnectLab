@@ -62,7 +62,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
       ],
-      "location": "East US",
+      "location": "East US 2",
       "resources": [
         {
           "type": "linkedservices",
