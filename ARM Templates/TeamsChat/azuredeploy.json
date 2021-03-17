@@ -263,6 +263,25 @@
         "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
       ],
       "properties": {}
-    }
+    },
+    {
+            "name": "[concat(variables('dataFactoryName'), '/AzureSelfHosted')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "East US 2",
+                        "dataFlowProperties": {
+                            "computeType": "General",
+                            "coreCount": 8,
+                            "timeToLive": 10
+                        }
+                    }
+                }
+            },
+            "dependsOn": []
+        }
   ]
 }
