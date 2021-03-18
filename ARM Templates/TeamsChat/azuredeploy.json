@@ -82,7 +82,7 @@
         "apiVersion": "2020-08-01-preview",
         "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
         "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
         ],
         "sku": {
             "name": "Standard_RAGRS",
@@ -103,7 +103,7 @@
         "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
         "dependsOn": [
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
         ],
         "properties": {
             "defaultEncryptionScope": "$account-encryption-key",
