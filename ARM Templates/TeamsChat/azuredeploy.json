@@ -117,7 +117,7 @@
       "type": "Microsoft.DataFactory/factories",
       "comments": "Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS.",
       "dependsOn": [
-        "[resourceId('Microsoft.DataLakeStore/accounts/', variables('destinationAdlsAccountName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
       ],
       "location": "East US 2",
       "resources": [
@@ -185,7 +185,7 @@
             "type": "AzureDataLakeStore",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.DataLakeStore/accounts', variables('destinationAdlsAccountName'))).endpoint)]",
+              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))).endpoint)]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
