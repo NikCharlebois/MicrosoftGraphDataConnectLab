@@ -179,7 +179,9 @@
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default/mgdccontainer')]"
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
+            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]",
+            "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]"
           ],
           "apiVersion": "2018-06-01",
           "properties": {
