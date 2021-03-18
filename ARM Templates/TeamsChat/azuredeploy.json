@@ -40,19 +40,76 @@
   },
   "resources": [
     {
-      "type": "Microsoft.DataLakeStore/accounts",
-      "name": "[variables('destinationAdlsAccountName')]",
-      "comments": "Creates the destination Data Lake store in the customer's subscription used in the ADF pipeline for the data output.",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-11-01",
-      "properties": {
-        "initialUser": "[parameters('AzureADAppId')]",
-        "newTier": "Consumption",
-        "encryptionState": "Enabled",
-        "encryptionConfig": {
-          "type": "ServiceManaged"
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2020-08-01-preview",
+        "name": "[variables('destinationAdlsAccountName')]",
+        "location": "East US 2",
+        "sku": {
+            "name": "Standard_RAGRS",
+            "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+            "minimumTlsVersion": "TLS1_2",
+            "allowBlobPublicAccess": true,
+            "allowSharedKeyAccess": true,
+            "isHnsEnabled": true,
+            "networkAcls": {
+                "bypass": "AzureServices",
+                "virtualNetworkRules": [],
+                "ipRules": [],
+                "defaultAction": "Allow"
+            },
+            "supportsHttpsTrafficOnly": true,
+            "encryption": {
+                "services": {
+                    "file": {
+                        "keyType": "Account",
+                        "enabled": true
+                    },
+                    "blob": {
+                        "keyType": "Account",
+                        "enabled": true
+                    }
+                },
+                "keySource": "Microsoft.Storage"
+            },
+            "accessTier": "Hot"
         }
-      }
+    },
+    {
+        "type": "Microsoft.Storage/storageAccounts/blobServices",
+        "apiVersion": "2020-08-01-preview",
+        "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+        ],
+        "sku": {
+            "name": "Standard_RAGRS",
+            "tier": "Standard"
+        },
+        "properties": {
+            "cors": {
+                "corsRules": []
+            },
+            "deleteRetentionPolicy": {
+                "enabled": false
+            }
+        }
+    },
+    {
+        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+        "apiVersion": "2020-08-01-preview",
+        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+        ],
+        "properties": {
+            "defaultEncryptionScope": "$account-encryption-key",
+            "denyEncryptionScopeOverride": false,
+            "publicAccess": "Container"
+        }
     },
     {
       "name": "[variables('dataFactoryName')]",
