@@ -185,7 +185,7 @@
             "type": "AzureDataLakeStore",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))).primaryEndpoints)]",
+              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))).primaryEndpoints.blob)]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
