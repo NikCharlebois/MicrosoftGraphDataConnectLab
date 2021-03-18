@@ -182,10 +182,10 @@
           ],
           "apiVersion": "2018-06-01",
           "properties": {
-            "type": "AzureDataLakeStore",
+            "type": "AzureBlobFS",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))).primaryEndpoints.blob)]",
+              "url": "[concat('https://', variables('destinationAdlsAccountName'), '.dfs.core.windows.net')]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
