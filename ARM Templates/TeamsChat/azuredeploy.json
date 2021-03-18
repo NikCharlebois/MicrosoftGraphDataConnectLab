@@ -256,7 +256,7 @@
             "apiVersion": "2017-09-01-preview",
             "properties": {
               "published": false,
-              "type": "AzureDataLakeStoreFile",
+              "type": "AzureBlobFSFile",
               "linkedServiceName": {
                 "referenceName": "[variables('destinationLinkedServiceName')]",
                 "type": "LinkedServiceReference"
