@@ -53,7 +53,6 @@
             "minimumTlsVersion": "TLS1_2",
             "allowBlobPublicAccess": true,
             "allowSharedKeyAccess": true,
-            "isHnsEnabled": true,
             "networkAcls": {
                 "bypass": "AzureServices",
                 "virtualNetworkRules": [],
