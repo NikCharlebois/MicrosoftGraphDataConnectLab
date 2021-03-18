@@ -180,12 +180,12 @@
           "dependsOn": [
             "[variables('dataFactoryName')]"
           ],
-          "apiVersion": "2018-06-01",
+          "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "AzureDataLakeStore",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))).primaryEndpoint)]",
+              "dataLakeStoreUri": "[concat('adl://', reference(resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))).endpoint)]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
