@@ -178,14 +178,15 @@
           "name": "[variables('destinationLinkedServiceName')]",
           "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
-            "[variables('dataFactoryName')]"
+            "[variables('dataFactoryName')]",
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default/mgdccontainer')]"
           ],
           "apiVersion": "2018-06-01",
           "properties": {
             "type": "AzureBlobFS",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "url": "[concat('https://', variables('destinationAdlsAccountName'), '.dfs.core.windows.net')]",
+              "url": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/mgdccontainer')]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
