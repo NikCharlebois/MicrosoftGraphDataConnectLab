@@ -121,7 +121,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
-        "apiVersion": "2017-05-01",
+        "apiVersion": "2018-01-01-preview",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
         ],
