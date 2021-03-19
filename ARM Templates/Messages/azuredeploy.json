@@ -208,10 +208,6 @@
           "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "AzureBlobStorage",
-            "connectVia": {
-                "referenceName": "AzureSelfHosted",
-                "type": "IntegrationRuntimeReference"
-            },
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
               "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
