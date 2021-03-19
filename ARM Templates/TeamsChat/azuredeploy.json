@@ -260,7 +260,7 @@
               },
               {
                 "Name": "sentDateTime",
-                "Type": "string"
+                "Type": "datetime"
               },
               {
                 "Name": "sender",
