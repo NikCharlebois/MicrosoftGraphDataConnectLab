@@ -32,10 +32,7 @@
     "pipelineName": "M365 Simple Pipeline",
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
-      "messagePath": "targetFolder/Message",
-      "eventPath": "targetFolder/Event",
-      "contactPath": "targetFolder/Contact",
-      "userPath": "targetFolder/User"
+      "messagePath": "mgdccontainer"
     }
   },
   "resources": [
@@ -74,6 +71,24 @@
                 "keySource": "Microsoft.Storage"
             },
             "accessTier": "Hot"
+        }
+    },
+    {
+        "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+        "apiVersion": "2017-05-01",
+        "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
+        "properties": {
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+            "principalId": "[parameters('AzureADAppId')]"
+        }
+    },
+    {
+        "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
+        "apiVersion": "2017-05-01",
+        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
+        "properties": {
+            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+            "principalId": "[parameters('AzureADAppId')]"
         }
     },
     {
