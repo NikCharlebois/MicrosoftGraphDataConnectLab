@@ -205,7 +205,7 @@
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]",
             "[resourceId('Microsoft.DataFactory/factories/integrationRuntimes', variables('dataFactoryName'), 'AzureSelfHosted')]"
           ],
-          "apiVersion": "2018-06-01",
+          "apiVersion": "2017-09-01-preview",
           "properties": {
             "type": "AzureBlobStorage",
             "connectVia": {
