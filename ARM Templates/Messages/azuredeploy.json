@@ -27,12 +27,12 @@
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
-    "inputTeamsChatDatasetName": "TeamsChatDataset",
-    "outputTeamsChatDatasetName": "ADLSOutputMessageDataset",
+    "inputDatasetName": "O365Dataset",
+    "outputDatasetName": "ADLSOutputDataset",
     "pipelineName": "M365 Simple Pipeline",
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
-      "messagePath": "mgdccontainer"
+      "filePath": "mgdccontainer"
     },
     "servicePrincipalObjectId" : "1b6d4f72-70ba-4911-8e77-682155be4662"
   },
@@ -202,19 +202,20 @@
             "[variables('dataFactoryName')]",
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
             "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]",
+            "[resourceId('Microsoft.DataFactory/factories/integrationRuntimes', variables('dataFactoryName'), 'AzureSelfHosted')]"
           ],
           "apiVersion": "2018-06-01",
           "properties": {
-            "type": "AzureBlobFS",
+            "type": "AzureBlobStorage",
             "connectVia": {
                 "referenceName": "AzureSelfHosted",
                 "type": "IntegrationRuntimeReference"
             },
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "url": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/mgdccontainer')]",
-              "servicePrincipalId": "[parameters('AzureADAppId')]",
+              "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
+			        "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('AzureADAppSecret')]"
@@ -227,7 +228,7 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('inputTeamsChatDatasetName')]",
+          "name": "[variables('inputDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]"
@@ -242,29 +243,45 @@
             },
             "structure": [
               {
-                "Name": "Importance",
+                "Name": "importance",
                 "Type": "string"
               },
               {
-                "Name": "From",
+                "Name": "from",
                 "Type": "string"
               },
               {
-                "Name": "CreatedDateTime",
+                "Name": "ccRecipients",
+                "Type": "string"
+              },
+              {
+                "Name": "id",
+                "Type": "string"
+              },
+              {
+                "Name": "sentDateTime",
                 "Type": "datetime"
               },
               {
-                "Name": "Id",
+                "Name": "sender",
                 "Type": "string"
               },
               {
-                "Name": "Attachments",
+                "Name": "toRecipients",
+                "Type": "string"
+              },
+              {
+                "Name": "replyTo",
+                "Type": "string"
+              },
+              {
+                "Name": "conversationId",
                 "Type": "string"
               }
             ],
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.TeamChat_v0",
-              "dateFilterColumn": "CreatedDateTime", 
+              "tableName": "BasicDataSet_v0.Message_v1",
+              "dateFilterColumn": "createdDateTime", 
               "startTime": "2016-10-28T15:50:27Z",
               "endTime": "2029-04-28T15:50:27Z"			
             },
@@ -273,7 +290,7 @@
           },
           {
             "type": "datasets",
-            "name": "[variables('outputTeamsChatDatasetName')]",
+            "name": "[variables('outputDatasetName')]",
             "dependsOn": [
               "[variables('dataFactoryName')]",
               "[variables('destinationLinkedServiceName')]"
@@ -287,7 +304,7 @@
                 "type": "LinkedServiceReference"
               },
               "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').messagePath]"
+                "folderPath": "[variables('outputDataLakeStore').filePath]"
               }
             }
           },
@@ -298,8 +315,8 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
-            "[variables('inputTeamsChatDatasetName')]",
-            "[variables('outputTeamsChatDatasetName')]"
+            "[variables('inputDatasetName')]",
+            "[variables('outputDatasetName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
@@ -310,13 +327,13 @@
                 "type": "Copy",
                 "inputs": [
                   {
-                    "referenceName": "[variables('inputTeamsChatDatasetName')]",
+                    "referenceName": "[variables('inputDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
                 "outputs": [
                   {
-                    "referenceName": "[variables('outputTeamsChatDatasetName')]",
+                    "referenceName": "[variables('outputDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
@@ -339,8 +356,8 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
-            "[variables('inputTeamsChatDatasetName')]",
-            "[variables('outputTeamsChatDatasetName')]",
+            "[variables('inputDatasetName')]",
+            "[variables('outputDatasetName')]",
             "[variables('pipelineName')]"
           ],
           "apiVersion": "2017-09-01-preview",
