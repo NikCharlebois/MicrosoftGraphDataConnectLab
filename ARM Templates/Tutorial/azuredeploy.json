@@ -200,27 +200,15 @@
           "comments": "Creates app setting overrides for the web app.",
           "apiVersion": "2015-08-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]",
-            "[concat('Microsoft.Web/Sites/', variables('webSiteName'), '/Extensions/MSDeploy')]"
+            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+            "[concat('Microsoft.Web/Sites/', parameters('webSiteName'), '/Extensions/MSDeploy')]"
           ],
           "tags": {
             "displayName": "AppSettingsConfiguration"
           },
           "properties": {
             "arm:TenantId": "[subscription().tenantId]",
-            "arm:ClientId": "[parameters('destinationServicePrincipalId')]",
-            "arm:PostLogoutRedirectUri": "[concat('https://', variables('webSiteName'), '.azurewebsites.net/')]",
-            "arm:AADInstance": "[variables('aadInstance')]",
-            "arm:SubscriptionId": "[subscription().subscriptionId]",
-            "arm:ManagedResourceGroupName": "[resourceGroup().name]",
-            "arm:DataFactoryName": "[variables('dataFactoryName')]",
-            "arm:PipelineName": "[variables('pipelineName')]",
-            "arm:ClientSecret": "[parameters('destinationServicePrincipalKey')]",
-            "arm:AccountName": "[parameters('destinationAdlsGen2AccountName')]",
-            "arm:Path": "[variables('outputDataLakeStore').containerName]",
-            "arm:ConnectionString": "[variables('destinationAdlsGen2ConnectionString')]",
-            "arm:ContainerName": "[variables('outputDataLakeStore').containerName]",
-            "arm:FilePath": "[concat(variables('outputDataLakeStore').messagePath, '/WkwScores')]"
+            "arm:PostLogoutRedirectUri": "[concat('https://', parameters('webSiteName'), '.azurewebsites.net/')]"
           }
         }
       ]
