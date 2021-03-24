@@ -154,7 +154,10 @@
       },
       "properties": {
         "name": "Free"
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+      ],
     },
     {
       "apiVersion": "2015-08-01",
@@ -167,7 +170,8 @@
         "displayName": "Website"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms/', 'Free')]"
+        "[resourceId('Microsoft.Web/serverfarms/', 'Free')]",
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
       ],
       "properties": {
         "name": "[parameters('webSiteName')]",
@@ -181,7 +185,8 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-08-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
           ],
           "tags": {
             "displayName": "EmailMetricsWebAppDeployment"
@@ -201,7 +206,8 @@
           "apiVersion": "2015-08-01",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
-            "[concat('Microsoft.Web/Sites/', parameters('webSiteName'), '/Extensions/MSDeploy')]"
+            "[concat('Microsoft.Web/Sites/', parameters('webSiteName'), '/Extensions/MSDeploy')]",
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
           ],
           "tags": {
             "displayName": "AppSettingsConfiguration"
