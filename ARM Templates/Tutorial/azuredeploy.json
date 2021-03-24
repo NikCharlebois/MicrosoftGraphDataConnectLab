@@ -157,7 +157,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
-      ],
+      ]
     },
     {
       "apiVersion": "2015-08-01",
