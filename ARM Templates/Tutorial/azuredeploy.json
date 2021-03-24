@@ -213,8 +213,7 @@
             "displayName": "AppSettingsConfiguration"
           },
           "properties": {
-            "arm:TenantId": "[subscription().tenantId]",
-            "arm:PostLogoutRedirectUri": "[concat('https://', parameters('webSiteName'), '.azurewebsites.net/')]"
+            "arm:AzureStorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('destinationAdlsAccountName'), ';AccountKey=', listKeys(resourceId(resourceGroup().name,'Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName')), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
           }
         }
       ]
