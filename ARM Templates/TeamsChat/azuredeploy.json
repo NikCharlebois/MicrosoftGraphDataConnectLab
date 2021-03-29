@@ -242,29 +242,29 @@
             },
             "structure": [
               {
-                "Name": "Importance",
+                "Name": "importance",
                 "Type": "string"
               },
               {
-                "Name": "From",
+                "Name": "from",
                 "Type": "string"
               },
               {
-                "Name": "CreatedDateTime",
+                "Name": "createdDateTime",
                 "Type": "datetime"
               },
               {
-                "Name": "Id",
+                "Name": "id",
                 "Type": "string"
               },
               {
-                "Name": "Attachments",
+                "Name": "attachments",
                 "Type": "string"
               }
             ],
             "typeProperties": {
               "tableName": "BasicDataSet_v0.TeamChat_v0",
-              "dateFilterColumn": "CreatedDateTime", 
+              "dateFilterColumn": "createdDateTime", 
               "startTime": "2016-10-28T15:50:27Z",
               "endTime": "2029-04-28T15:50:27Z"			
             },

@@ -175,7 +175,18 @@
       ],
       "properties": {
         "name": "[parameters('webSiteName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'Free')]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'Free')]",
+        "scmType": "GitHubAction",
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
       },
       "resources": [
         {
