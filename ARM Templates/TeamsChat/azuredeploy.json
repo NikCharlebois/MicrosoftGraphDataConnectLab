@@ -27,112 +27,111 @@
     "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
     "destinationLinkedServiceName": "DestinationADLSLinkedService",
-    "inputTeamsChatDatasetName": "TeamsChatDataset",
-    "outputTeamsChatDatasetName": "ADLSOutputMessageDataset",
+    "inputDatasetName": "O365Dataset",
+    "outputDatasetName": "ADLSOutputDataset",
     "pipelineName": "M365 Simple Pipeline",
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
-      "messagePath": "mgdccontainer"
+      "filePath": "mgdccontainer"
     },
     "servicePrincipalObjectId" : "1b6d4f72-70ba-4911-8e77-682155be4662"
   },
   "resources": [
     {
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2020-08-01-preview",
-        "name": "[variables('destinationAdlsAccountName')]",
-        "location": "East US 2",
-        "sku": {
-            "name": "Standard_RAGRS",
-            "tier": "Standard"
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[variables('destinationAdlsAccountName')]",
+      "location": "East US 2",
+      "sku": {
+        "name": "Standard_RAGRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "minimumTlsVersion": "TLS1_2",
+        "allowBlobPublicAccess": true,
+        "allowSharedKeyAccess": true,
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
         },
-        "kind": "StorageV2",
-        "properties": {
-            "minimumTlsVersion": "TLS1_2",
-            "allowBlobPublicAccess": true,
-            "allowSharedKeyAccess": true,
-            "networkAcls": {
-                "bypass": "AzureServices",
-                "virtualNetworkRules": [],
-                "ipRules": [],
-                "defaultAction": "Allow"
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "keyType": "Account",
+              "enabled": true
             },
-            "supportsHttpsTrafficOnly": true,
-            "encryption": {
-                "services": {
-                    "file": {
-                        "keyType": "Account",
-                        "enabled": true
-                    },
-                    "blob": {
-                        "keyType": "Account",
-                        "enabled": true
-                    }
-                },
-                "keySource": "Microsoft.Storage"
-            },
-            "accessTier": "Hot"
-        }
-    },
-    {
-        "type": "Microsoft.Storage/storageAccounts/blobServices",
-        "apiVersion": "2020-08-01-preview",
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
-        ],
-        "sku": {
-            "name": "Standard_RAGRS",
-            "tier": "Standard"
-        },
-        "properties": {
-            "cors": {
-                "corsRules": []
-            },
-            "deleteRetentionPolicy": {
-                "enabled": false
+            "blob": {
+              "keyType": "Account",
+              "enabled": true
             }
-        }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
     },
     {
-        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-        "apiVersion": "2020-08-01-preview",
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
-        ],
-        "properties": {
-            "defaultEncryptionScope": "$account-encryption-key",
-            "denyEncryptionScopeOverride": false,
-            "publicAccess": "Container"
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
+      ],
+      "sku": {
+        "name": "Standard_RAGRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
         }
+      }
     },
     {
-        "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-        "apiVersion": "2017-05-01",
-        "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
-        ],
-        "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
-        "properties": {
-            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-            "principalId": "[variables('servicePrincipalObjectId')]"
-        }
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
+      ],
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "publicAccess": "Container"
+      }
     },
     {
-        "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
-        "apiVersion": "2018-01-01-preview",
-        "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
-        ],
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
-        "properties": {
-            "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
-            "principalId": "[variables('servicePrincipalObjectId')]"
-        }
+      "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+      "apiVersion": "2017-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+      ],
+      "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
+      "properties": {
+        "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "principalId": "[variables('servicePrincipalObjectId')]"
+      }
     },
     {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
+      "apiVersion": "2018-01-01-preview",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+      ],
+      "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
+      "properties": {
+        "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+        "principalId": "[variables('servicePrincipalObjectId')]"
+      }
+    },{
       "name": "[variables('dataFactoryName')]",
       "apiVersion": "2017-09-01-preview",
       "type": "Microsoft.DataFactory/factories",
@@ -147,20 +146,20 @@
           "type": "Microsoft.DataFactory/factories/integrationRuntimes",
           "apiVersion": "2017-09-01-preview",
           "properties": {
-              "type": "Managed",
-              "typeProperties": {
-                  "computeProperties": {
-                      "location": "East US 2",
-                      "dataFlowProperties": {
-                          "computeType": "General",
-                          "coreCount": 8,
-                          "timeToLive": 10
-                      }
-                  }
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "East US 2",
+                "dataFlowProperties": {
+                  "computeType": "General",
+                  "coreCount": 8,
+                  "timeToLive": 10
+                }
               }
+            }
           },
           "dependsOn": [
-                "[variables('dataFactoryName')]"
+            "[variables('dataFactoryName')]"
           ]
         },
         {
@@ -176,8 +175,8 @@
           "properties": {
             "type": "Office365",
             "connectVia": {
-                "referenceName": "AzureSelfHosted",
-                "type": "IntegrationRuntimeReference"
+              "referenceName": "AzureSelfHosted",
+              "type": "IntegrationRuntimeReference"
             },
             "description": "Source O365 linked service",
             "typeProperties": {
@@ -202,18 +201,15 @@
             "[variables('dataFactoryName')]",
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
             "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]",
+            "[resourceId('Microsoft.DataFactory/factories/integrationRuntimes', variables('dataFactoryName'), 'AzureSelfHosted')]"
           ],
-          "apiVersion": "2018-06-01",
+          "apiVersion": "2017-09-01-preview",
           "properties": {
-            "type": "AzureBlobFS",
-            "connectVia": {
-                "referenceName": "AzureSelfHosted",
-                "type": "IntegrationRuntimeReference"
-            },
+            "type": "AzureBlobStorage",
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
-              "url": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/mgdccontainer')]",
+              "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
@@ -227,7 +223,7 @@
         },
         {
           "type": "datasets",
-          "name": "[variables('inputTeamsChatDatasetName')]",
+          "name": "[variables('inputDatasetName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]"
@@ -269,28 +265,28 @@
               "endTime": "2029-04-28T15:50:27Z"			
             },
             "external": true
+          }
+        },
+        {
+          "type": "datasets",
+          "name": "[variables('outputDatasetName')]",
+          "dependsOn": [
+            "[variables('dataFactoryName')]",
+            "[variables('destinationLinkedServiceName')]"
+          ],
+          "apiVersion": "2017-09-01-preview",
+          "properties": {
+            "published": false,
+            "type": "AzureBlobFSFile",
+            "linkedServiceName": {
+              "referenceName": "[variables('destinationLinkedServiceName')]",
+              "type": "LinkedServiceReference"
+            },
+            "typeProperties": {
+              "folderPath": "[variables('outputDataLakeStore').filePath]"
             }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputTeamsChatDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
-            "apiVersion": "2017-09-01-preview",
-            "properties": {
-              "published": false,
-              "type": "AzureBlobFSFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').messagePath]"
-              }
-            }
-          },
+          }
+        },
         {
           "type": "pipelines",
           "name": "[variables('pipelineName')]",
@@ -298,8 +294,8 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
-            "[variables('inputTeamsChatDatasetName')]",
-            "[variables('outputTeamsChatDatasetName')]"
+            "[variables('inputDatasetName')]",
+            "[variables('outputDatasetName')]"
           ],
           "apiVersion": "2017-09-01-preview",
           "properties": {
@@ -310,13 +306,13 @@
                 "type": "Copy",
                 "inputs": [
                   {
-                    "referenceName": "[variables('inputTeamsChatDatasetName')]",
+                    "referenceName": "[variables('inputDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
                 "outputs": [
                   {
-                    "referenceName": "[variables('outputTeamsChatDatasetName')]",
+                    "referenceName": "[variables('outputDatasetName')]",
                     "type": "DatasetReference"
                   }
                 ],
@@ -339,8 +335,8 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]",
             "[variables('destinationLinkedServiceName')]",
-            "[variables('inputTeamsChatDatasetName')]",
-            "[variables('outputTeamsChatDatasetName')]",
+            "[variables('inputDatasetName')]",
+            "[variables('outputDatasetName')]",
             "[variables('pipelineName')]"
           ],
           "apiVersion": "2017-09-01-preview",
