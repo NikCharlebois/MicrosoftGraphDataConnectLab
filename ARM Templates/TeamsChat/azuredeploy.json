@@ -5,30 +5,23 @@
     "AzureADAppId": {
       "type": "string",
       "metadata": {
-        "description": "The id of the service principal that has access to the destination Data Lake store."
+        "description": "The id of the service principal that has access to the storage account."
       }
     },
     "AzureADAppSecret": {
       "type": "string",
       "metadata": {
-        "description": "The key of the service principal that has access to the destination Data Lake store."
-      }
-    },
-    "allowedGroups": {
-      "type": "array",
-      "defaultValue": [],
-      "metadata": {
-        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
+        "description": "The key of the service principal that has access to the storage account."
       }
     }
   },
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('myadls', uniqueString(resourceGroup().id))]",
+    "destinationAdlsAccountName": "[concat('azstorage', uniqueString(resourceGroup().id))]",
     "sourceLinkedServiceName": "SourceO365LinkedService",
-    "destinationLinkedServiceName": "DestinationADLSLinkedService",
+    "destinationLinkedServiceName": "DestinationStorageLinkedService",
     "inputDatasetName": "O365Dataset",
-    "outputDatasetName": "ADLSOutputDataset",
+    "outputDatasetName": "O365Storage",
     "pipelineName": "M365 Simple Pipeline",
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
@@ -165,7 +158,7 @@
         {
           "type": "linkedservices",
           "name": "[variables('sourceLinkedServiceName')]",
-          "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
+          "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source Azure storage account owner.",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "AzureSelfHosted"
@@ -189,14 +182,14 @@
                 "value": "[parameters('AzureADAppSecret')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[parameters('allowedGroups')]"
+              "allowedGroups": ""
             }
           }
         },
         {
           "type": "linkedservices",
           "name": "[variables('destinationLinkedServiceName')]",
-          "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
+          "comments": "Creates the link to the newly created destination Azure storage, using service principal supplied by the customer deploying this template.",
           "dependsOn": [
             "[variables('dataFactoryName')]",
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
@@ -207,7 +200,7 @@
           "apiVersion": "2018-06-01",
           "properties": {
             "type": "AzureBlobStorage",
-            "description": "Destination Azure Data Lake Store linked service",
+            "description": "Destination Azure Storage account linked service",
             "typeProperties": {
               "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
               "servicePrincipalId": "[parameters('AzureADAppId')]",
@@ -301,8 +294,8 @@
           "properties": {
             "activities": [
               {
-                "name": "Copy Teams Chat Data",
-                "description": "Copy Teams chat data from O365 to Azure Data Lake Store",
+                "name": "Copy Dataset",
+                "description": "Copy dataset from O365 to Azure Storage Account",
                 "type": "Copy",
                 "inputs": [
                   {
