@@ -237,7 +237,7 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.MailboxSettings"
+              "tableName": "BasicDataSet_v0.MailboxSettings_v0"
             },
             "external": true
             }
