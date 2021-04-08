@@ -38,7 +38,7 @@
   "resources": [
     {
         "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2020-08-01-preview",
+        "apiVersion": "2021-01-01",
         "name": "[variables('destinationAdlsAccountName')]",
         "location": "East US 2",
         "sku": {
@@ -75,7 +75,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices",
-        "apiVersion": "2020-08-01-preview",
+        "apiVersion": "2021-01-01",
         "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
         "dependsOn": [
             "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
@@ -95,7 +95,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-        "apiVersion": "2020-08-01-preview",
+        "apiVersion": "2021-01-01",
         "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
         "dependsOn": [
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
@@ -109,7 +109,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-        "apiVersion": "2017-05-01",
+        "apiVersion": "2021-01-01",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
         ],
@@ -121,7 +121,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
-        "apiVersion": "2018-01-01-preview",
+        "apiVersion": "2021-01-01",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
         ],
@@ -133,7 +133,7 @@
     },
     {
       "name": "[variables('dataFactoryName')]",
-      "apiVersion": "2017-09-01-preview",
+      "apiVersion": "2018-06-01",
       "type": "Microsoft.DataFactory/factories",
       "comments": "Creates the ADF pipeline that copies data from O365 to the newly created destination ADLS.",
       "dependsOn": [
@@ -144,7 +144,7 @@
         {
           "name": "[concat(variables('dataFactoryName'), '/AzureSelfHosted')]",
           "type": "Microsoft.DataFactory/factories/integrationRuntimes",
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2021-01-01",
           "properties": {
               "type": "Managed",
               "typeProperties": {
@@ -171,7 +171,7 @@
             "AzureSelfHosted"
           ],
           "location": "East US 2",
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2018-06-01",
           "properties": {
             "type": "Office365",
             "connectVia": {
@@ -204,7 +204,7 @@
             "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]",
             "[resourceId('Microsoft.DataFactory/factories/integrationRuntimes', variables('dataFactoryName'), 'AzureSelfHosted')]"
           ],
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2018-06-01",
           "properties": {
             "type": "AzureBlobStorage",
             "description": "Destination Azure Data Lake Store linked service",
@@ -228,7 +228,7 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]"
           ],
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2018-06-01",
           "properties": {
             "published": false,
             "type": "Office365Table",
@@ -252,7 +252,7 @@
               "[variables('dataFactoryName')]",
               "[variables('destinationLinkedServiceName')]"
             ],
-            "apiVersion": "2017-09-01-preview",
+            "apiVersion": "2018-06-01",
             "properties": {
               "published": false,
               "type": "AzureBlobFSFile",
@@ -275,7 +275,7 @@
             "[variables('inputDatasetName')]",
             "[variables('outputDatasetName')]"
           ],
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2018-06-01",
           "properties": {
             "activities": [
               {
@@ -317,7 +317,7 @@
             "[variables('outputDatasetName')]",
             "[variables('pipelineName')]"
           ],
-          "apiVersion": "2017-09-01-preview",
+          "apiVersion": "2018-06-01",
           "properties": {
             "type": "ScheduleTrigger",
             "typeProperties": {
@@ -344,7 +344,7 @@
     {
       "type": "Microsoft.DataFactory/factories/triggers/status",
       "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
-      "apiVersion": "2017-09-01-preview",
+      "apiVersion": "2021-01-01",
       "dependsOn": [
         "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
       ],
