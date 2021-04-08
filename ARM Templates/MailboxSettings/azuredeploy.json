@@ -236,7 +236,28 @@
               "referenceName": "[variables('sourceLinkedServiceName')]",
               "type": "LinkedServiceReference"
             },
-            "structure": [],
+            "structure": [
+              {
+                "Name": "archiveFolder",
+                "Type": "string"
+              },
+              {
+                "Name": "timeZone",
+                "Type": "string"
+              },
+              {
+                "Name": "automaticRepliesSetting",
+                "Type": "string"
+              },
+              {
+                "Name": "language",
+                "Type": "string"
+              },
+              {
+                "Name": "workingHours",
+                "Type": "string"
+              }
+            ],
             "typeProperties": {
               "tableName": "BasicDataSet_v0.MailboxSettings_v0"
             },
