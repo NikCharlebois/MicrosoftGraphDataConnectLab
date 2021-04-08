@@ -237,10 +237,7 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.MailboxSettings",
-              "dateFilterColumn": "createdDateTime", 
-              "startTime": "2016-10-28T15:50:27Z",
-              "endTime": "2029-04-28T15:50:27Z"			
+              "tableName": "BasicDataSet_v0.MailboxSettings"
             },
             "external": true
             }
