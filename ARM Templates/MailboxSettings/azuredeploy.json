@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "ApplicationID": {
+      "type": "string",
+      "metadata": {
+        "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account."
+      }
+    },
     "ServicePrincipalID": {
       "type": "string",
       "metadata": {
@@ -14,13 +20,6 @@
         "description": "The key of the service principal that has access to the destination Azure Storage Account."
       }
     },
-    "allowedGroups": {
-      "type": "array",
-      "defaultValue": [],
-      "metadata": {
-        "description": "The object ids of the groups of users to extract data from. List up to 10 groups."
-      }
-    }
   },
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
@@ -33,7 +32,8 @@
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
       "filePath": "mgdccontainer"
-    }
+    },
+    "allowedGroups": []
   },
   "resources": [
     {
@@ -183,13 +183,13 @@
               "office365tenantId": "[subscription().tenantId]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
-              "servicePrincipalId": "[parameters('ServicePrincipalID')]",
+              "servicePrincipalId": "[parameters('ApplicationID')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('ServicePrincipalSecret')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[parameters('allowedGroups')]"
+              "allowedGroups": "[variables('allowedGroups')]"
             }
           }
         },
@@ -210,7 +210,7 @@
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
               "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
-			        "servicePrincipalId": "[parameters('ServicePrincipalID')]",
+			        "servicePrincipalId": "[parameters('ApplicationID')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('ServicePrincipalSecret')]"
