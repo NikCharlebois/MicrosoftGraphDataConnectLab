@@ -2,6 +2,28 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "DatasetName": {
+      "type": "string",
+      "metadata": "Name of the Office 365 dataset to export.",
+      "allowedValues": [
+        "BasicDataSet_v0.CalendarView_v0",
+        "BasicDataSet_v0.Contact_v0",
+        "BasicDataSet_v0.Contact_v1",
+        "BasicDataSet_v0.DirectReport_v0",
+        "BasicDataSet_v0.Event_v0",
+        "BasicDataSet_v0.Event_v1",
+        "BasicDataSet_v0.MailboxSettings_v0",
+        "BasicDataSet_v0.MailFolder_v0",
+        "BasicDataSet_v0.Manager_v0",
+        "BasicDataSet_v0.Message_v0",
+        "BasicDataSet_v0.Message_v1",
+        "BasicDataSet_v0.SentItem_v0",
+        "BasicDataSet_v0.SentItem_v1",
+        "BasicDataSet_v0.TeamChat_v0 (Preview)",
+        "BasicDataSet_v0.User_v0",
+        "BasicDataSet_v0.User_v1"
+      ]
+    },
     "ApplicationID": {
       "type": "string",
       "metadata": {
@@ -237,7 +259,7 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.MailboxSettings_v0"
+              "tableName": "[replace(parameters('DatasetName'), ' (Preview)', '')]"
             },
             "external": true
             }
