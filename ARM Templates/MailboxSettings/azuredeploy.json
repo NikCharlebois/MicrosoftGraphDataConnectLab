@@ -109,7 +109,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-        "apiVersion": "2019-06-01",
+        "apiVersion": "2018-07-01",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
         ],
@@ -121,7 +121,7 @@
     },
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
-        "apiVersion": "2019-06-01",
+        "apiVersion": "2018-07-01",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
         ],
@@ -344,7 +344,7 @@
     {
       "type": "Microsoft.DataFactory/factories/triggers/status",
       "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
-      "apiVersion": "2021-01-01",
+      "apiVersion": "2018-06-01",
       "dependsOn": [
         "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
       ],
