@@ -19,7 +19,7 @@
       "metadata": {
         "description": "The key of the service principal that has access to the destination Azure Storage Account."
       }
-    },
+    }
   },
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
