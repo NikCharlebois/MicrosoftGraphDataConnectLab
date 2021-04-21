@@ -5,7 +5,7 @@
     "AppId": {
       "type": "string",
       "metadata": {
-        "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account.",
+        "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account."
       }
     },
     "AppSecret": {
