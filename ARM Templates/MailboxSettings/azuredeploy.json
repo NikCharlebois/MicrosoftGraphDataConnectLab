@@ -2,22 +2,16 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ApplicationID": {
+    "AppId": {
       "type": "string",
       "metadata": {
         "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account."
       }
     },
-    "ServicePrincipalID": {
+    "AppSecret": {
       "type": "string",
       "metadata": {
-        "description": "The id of the service principal that has access to the destination Azure Storage Account."
-      }
-    },
-    "ServicePrincipalSecret": {
-      "type": "string",
-      "metadata": {
-        "description": "The key of the service principal that has access to the destination Azure Storage Account."
+        "description": "The secret for the Azure AD Application that has access to the destination Azure Storage Account."
       }
     }
   },
@@ -36,6 +30,31 @@
     "allowedGroups": []
   },
   "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "ApplicationScript",
+      "location": "[resourceGroup().location]",
+      "kind": "AzurePowerShell",
+      "properties": {
+        "forceUpdateTag": "1",
+        "azPowerShellVersion": "3.0",
+        "environmentVariables": [
+        {
+            "name":"AppSecret",
+            "secureValue": "[parameters('AppSecret')]"
+          }
+        ],
+        "arguments": "[format(' -AppID {0} -TenantId {1} -AppToGet {2}', parameters('AppId'), subscription().tenantId, parameters('AppId'))]",
+        "primaryScriptUri": "https://raw.githubusercontent.com/nikcharlebois/demos/main/EventHub/GetServicePrincipalId.ps1",
+        "timeout": "PT30M",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D",
+        "dependsOn": [
+            "[resourceId('Microsoft.Resources/deploymentScript', 'GraphChangeTracking')]"
+        ]
+      }
+    },
     {
         "type": "Microsoft.Storage/storageAccounts",
         "apiVersion": "2021-01-01",
@@ -116,7 +135,7 @@
         "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
         "properties": {
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-            "principalId": "[parameters('ServicePrincipalID')]"
+            "principalId": "[reference('GraphChangeTracking').outputs.PrincipalId]"
         }
     },
     {
@@ -128,7 +147,7 @@
         "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
         "properties": {
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
-            "principalId": "[parameters('ServicePrincipalID')]"
+            "principalId": "[reference('GraphChangeTracking').outputs.PrincipalId]"
         }
     },
     {
@@ -183,10 +202,10 @@
               "office365tenantId": "[subscription().tenantId]",
               "PrivacyPolicyUri": "http://www.wkw.com/privacy",
               "TermsOfUseUri": "http://www.wkw.com/tos",
-              "servicePrincipalId": "[parameters('ApplicationID')]",
+              "servicePrincipalId": "[parameters('AppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
-                "value": "[parameters('ServicePrincipalSecret')]"
+                "value": "[parameters('AppSecret')]"
               },
               "servicePrincipalTenantId": "[subscription().tenantId]",
               "allowedGroups": "[variables('allowedGroups')]"
@@ -210,10 +229,10 @@
             "description": "Destination Azure Data Lake Store linked service",
             "typeProperties": {
               "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
-			        "servicePrincipalId": "[parameters('ApplicationID')]",
+			        "servicePrincipalId": "[parameters('AppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
-                "value": "[parameters('ServicePrincipalSecret')]"
+                "value": "[parameters('AppSecret')]"
               },
               "tenant": "[subscription().tenantId]",
               "resourceGroupName": "[resourceGroup().name]",
