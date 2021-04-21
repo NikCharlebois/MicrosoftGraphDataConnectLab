@@ -197,7 +197,7 @@
                 "annotations": [],
                 "type": "AzureBlobFS",
                 "typeProperties": {
-                    "url": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
+                    "url": "[concat('https://', variables('destinationAdlsAccountName'), '.dfs.core.windows.net/')]",
                     "tenant": "[subscription().tenantId]",
                     "servicePrincipalId": "[reference('ApplicationScript').outputs.PrincipalId]",
                     "servicePrincipalCredentialType": "ServicePrincipalKey",
@@ -225,8 +225,7 @@
                 "typeProperties": {
                     "location": {
                         "type": "AzureBlobFSLocation",
-                        "folderPath": "messages",
-                        "fileSystem": "datasets"
+                        "folderPath": "messages"
                     }
                 }
             },
@@ -392,6 +391,12 @@
                                     },
                                     {
                                         "name": "conversationIndex"
+                                    },
+                                    {
+                                        "name": "body"
+                                    },
+                                    {
+                                        "name": "bodyPreview"
                                     }
                                 ]
                             },
