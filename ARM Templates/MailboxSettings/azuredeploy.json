@@ -191,7 +191,7 @@
               }
           },
           "dependsOn": [
-                "[variables('dataFactoryName')]"
+            "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
           ]
         },
         {
@@ -213,7 +213,7 @@
                 }
             },
             "dependsOn": [
-              "[variables('dataFactoryName')]"
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
         {
