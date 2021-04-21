@@ -36,11 +36,6 @@
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('astore', uniqueString(resourceGroup().id))]",
-    "sourceLinkedServiceName": "SourceO365LinkedService",
-    "destinationLinkedServiceName": "DestinationLinkedService",
-    "inputDatasetName": "O365Dataset",
-    "outputDatasetName": "StorageOutputDataset",
-    "pipelineName": "M365 Simple Pipeline",
     "triggerName": "Daily Trigger"
   },
   "resources": [
@@ -458,7 +453,7 @@
               {
                 "pipelineReference": {
                   "type": "PipelineReference",
-                  "referenceName": "[variables('pipelineName')]"
+                  "referenceName": "ExportO365Data"
                 },
                 "parameters": {}
               }
