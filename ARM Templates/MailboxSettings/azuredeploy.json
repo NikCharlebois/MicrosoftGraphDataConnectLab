@@ -236,7 +236,8 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('dataFactoryName'), '/linkedServices/ADLSSink')]"
+                "[concat(variables('dataFactoryName'), '/linkedServices/ADLSSink')]",
+                "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
         {
@@ -277,7 +278,8 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('dataFactoryName'), '/linkedServices/Office365Service')]"
+              "[concat(variables('dataFactoryName'), '/linkedServices/Office365Service')]",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
         {
@@ -425,8 +427,9 @@
                 "annotations": []
             },
             "dependsOn": [
-                "[concat(variables('dataFactoryName'), '/datasets/Office365DataSet')]",
-                "[concat(variables('dataFactoryName'), '/datasets/BinarySink')]"
+              "[concat(variables('dataFactoryName'), '/datasets/Office365DataSet')]",
+              "[concat(variables('dataFactoryName'), '/datasets/BinarySink')]",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
         {
