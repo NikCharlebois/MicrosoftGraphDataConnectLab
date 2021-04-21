@@ -199,7 +199,7 @@
           ]
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/AzureDataLakeStorage1')]",
+            "name": "[concat(variables('dataFactoryName'), '/ADLSSink')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -224,7 +224,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "AzureDataLakeStorage1",
+                    "referenceName": "ADLSSink",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
@@ -238,7 +238,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('dataFactoryName'), '/linkedServices/AzureDataLakeStorage1')]"
+                "[concat(variables('dataFactoryName'), '/linkedServices/ADLSSink')]"
             ]
         },
         {
@@ -259,7 +259,7 @@
             }
           },
           "dependsOn": [
-            "[variables('dataFactoryName')]"
+            "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
           ]
         },
         {
