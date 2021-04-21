@@ -435,6 +435,186 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Message_v1')]"
         },
         {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365Data')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "startTime": "2021-01-01T00:00:00Z",
+                                "endTime": "2021-04-19T00:00:00Z",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "allowNewTimeProposals"
+                                    },
+                                    {
+                                        "name": "createdDateTime"
+                                    },
+                                    {
+                                        "name": "lastModifiedDateTime"
+                                    },
+                                    {
+                                        "name": "changeKey"
+                                    },
+                                    {
+                                        "name": "categories"
+                                    },
+                                    {
+                                        "name": "originalStartTimeZone"
+                                    },
+                                    {
+                                        "name": "originalEndTimeZone"
+                                    },
+                                    {
+                                        "name": "responseStatus"
+                                    },
+                                    {
+                                        "name": "iCalUId"
+                                    },
+                                    {
+                                        "name": "isOnlineMeeting"
+                                    },
+                                    {
+                                        "name": "reminderMinutesBeforeStart"
+                                    },
+                                    {
+                                        "name": "isReminderOn"
+                                    },
+                                    {
+                                        "name": "hasAttachments"
+                                    },
+                                    {
+                                        "name": "subject"
+                                    },
+                                    {
+                                        "name": "body"
+                                    },
+                                    {
+                                        "name": "importance"
+                                    },
+                                    {
+                                        "name": "sensitivity"
+                                    },
+                                    {
+                                        "name": "start"
+                                    },
+                                    {
+                                        "name": "end"
+                                    },
+                                    {
+                                        "name": "location"
+                                    },
+                                    {
+                                        "name": "isAllDay"
+                                    },
+                                    {
+                                        "name": "isCancelled"
+                                    },
+                                    {
+                                        "name": "isOrganizer"
+                                    },
+                                    {
+                                        "name": "onlineMeeting"
+                                    },
+                                    {
+                                        "name": "onlineMeetingProvider"
+                                    },
+                                    {
+                                        "name": "recurrence"
+                                    },
+                                    {
+                                        "name": "responseRequested"
+                                    },
+                                    {
+                                        "name": "showAs"
+                                    },
+                                    {
+                                        "name": "transactionId"
+                                    },
+                                    {
+                                        "name": "type"
+                                    },
+                                    {
+                                        "name": "attendees"
+                                    },
+                                    {
+                                        "name": "organizer"
+                                    },
+                                    {
+                                        "name": "webLink"
+                                    },
+                                    {
+                                        "name": "attachments"
+                                    },
+                                    {
+                                        "name": "bodyPreview"
+                                    },
+                                    {
+                                        "name": "locations"
+                                    },
+                                    {
+                                        "name": "onlineMeetingUrl"
+                                    },
+                                    {
+                                        "name": "seriesMasterId"
+                                    },
+                                    {
+                                        "name": "originalStart"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.CalendarView_v0')]"
+        },
+        {
           "type": "triggers",
           "name": "[variables('triggerName')]",
           "dependsOn": [
