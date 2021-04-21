@@ -138,7 +138,7 @@
         "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
         "apiVersion": "2018-07-01",
         "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'datasets')]"
         ],
         "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
         "properties": {
@@ -150,9 +150,9 @@
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
         "apiVersion": "2018-07-01",
         "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]"
+          "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'datasets')]"
         ],
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
+        "name": "[concat(variables('destinationAdlsAccountName'), '/default/datasets/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
         "properties": {
             "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
             "principalId": "[reference('ApplicationScript').outputs.PrincipalId]"
