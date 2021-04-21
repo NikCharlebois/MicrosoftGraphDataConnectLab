@@ -437,11 +437,11 @@
           "name": "[variables('triggerName')]",
           "dependsOn": [
             "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]",
-            "[variables('destinationLinkedServiceName')]",
-            "[variables('inputDatasetName')]",
-            "[variables('outputDatasetName')]",
-            "[variables('pipelineName')]"
+            "Office365Service",
+            "ADLSSink",
+            "Office365DataSet",
+            "BinarySink",
+            "ExportO365Data"
           ],
           "apiVersion": "2018-06-01",
           "properties": {
