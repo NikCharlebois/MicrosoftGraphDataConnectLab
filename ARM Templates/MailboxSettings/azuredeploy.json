@@ -431,7 +431,8 @@
               "Office365DataSet",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
-            ]
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Message_v1')]"
         },
         {
           "type": "triggers",
