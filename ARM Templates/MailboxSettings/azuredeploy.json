@@ -72,79 +72,77 @@
       }
     },
     {
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2021-01-01",
-        "name": "[variables('destinationAdlsAccountName')]",
-        "location": "East US 2",
-        "dependsOn": [
-          "[resourceId('Microsoft.Resources/deploymentScripts', 'ApplicationScript')]"
-        ],
-        "sku": {
-            "name": "Standard_RAGRS",
-            "tier": "Standard"
-        },
-        "kind": "StorageV2",
-        "properties": {
-            "minimumTlsVersion": "TLS1_2",
-            "allowBlobPublicAccess": true,
-            "allowSharedKeyAccess": true,
-            "networkAcls": {
-                "bypass": "AzureServices",
-                "virtualNetworkRules": [],
-                "ipRules": [],
-                "defaultAction": "Allow"
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-01-01",
+            "name": "[variables('destinationAdlsAccountName')]",
+            "location": "eastus2",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
             },
-            "supportsHttpsTrafficOnly": true,
-            "encryption": {
-                "services": {
-                    "file": {
-                        "keyType": "Account",
-                        "enabled": true
-                    },
-                    "blob": {
-                        "keyType": "Account",
-                        "enabled": true
-                    }
+            "kind": "StorageV2",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "isHnsEnabled": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
                 },
-                "keySource": "Microsoft.Storage"
-            },
-            "accessTier": "Hot"
-        }
-    },
-    {
-        "type": "Microsoft.Storage/storageAccounts/blobServices",
-        "apiVersion": "2021-01-01",
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
-        ],
-        "sku": {
-            "name": "Standard_RAGRS",
-            "tier": "Standard"
-        },
-        "properties": {
-            "cors": {
-                "corsRules": []
-            },
-            "deleteRetentionPolicy": {
-                "enabled": false
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
             }
-        }
-    },
-    {
-        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-        "apiVersion": "2021-01-01",
-        "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]"
-        ],
-        "properties": {
-            "defaultEncryptionScope": "$account-encryption-key",
-            "denyEncryptionScopeOverride": false,
-            "publicAccess": "Container"
-        }
-    },
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2021-01-01",
+            "name": "[concat(variables('destinationAdlsAccountName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+            ],
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-01-01",
+            "name": "[concat(variables('destinationAdlsAccountName'), '/default/datasets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('destinationAdlsAccountName'))]"
+            ],
+            "properties": {
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "Container"
+            }
+        },
     {
         "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
         "apiVersion": "2018-07-01",
