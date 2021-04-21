@@ -9,7 +9,7 @@
       }
     },
     "AppSecret": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "The secret for the Azure AD Application that has access to the destination Azure Storage Account."
       }
