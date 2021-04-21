@@ -5,13 +5,31 @@
     "AppId": {
       "type": "string",
       "metadata": {
-        "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account."
+        "description": "The id of the Azure AD Application that has access to the destination Azure Storage Account.",
       }
     },
     "AppSecret": {
       "type": "securestring",
       "metadata": {
         "description": "The secret for the Azure AD Application that has access to the destination Azure Storage Account."
+      }
+    },
+    "DataSet":{
+      "type": "string",
+      "allowedValues": [
+        "BasicDataSet_v0.CalendarView_v0",
+        "BasicDataSet_v0.Contact_v1",
+        "BasicDataSet_v0.DirectReport_v0",
+        "BasicDataSet_v0.Event_v1",
+        "BasicDataSet_v0.MailFolder_v0",
+        "BasicDataSet_v0.MailboxSettings_v0",
+        "BasicDataSet_v0.Manager_v0",
+        "BasicDataSet_v0.Message_v1",
+        "BasicDataSet_v0.SentItem_v1",
+        "BasicDataSet_v0.User_v1"
+      ],
+      "metadata": {
+        "description": "The name of the dataset to export."
       }
     }
   },
@@ -238,6 +256,7 @@
             }
           }
         },
+        
         {
           "type": "datasets",
           "name": "[variables('inputDatasetName')]",
@@ -245,6 +264,7 @@
             "[variables('dataFactoryName')]",
             "[variables('sourceLinkedServiceName')]"
           ],
+          "condition":"[equals(parameters('DataSet'),'BasicDataSet_v0.MailboxSettings_v0')]",
           "apiVersion": "2018-06-01",
           "properties": {
             "published": false,
@@ -254,7 +274,7 @@
               "type": "LinkedServiceReference"
             },
             "typeProperties": {
-              "tableName": "BasicDataSet_v0.MailboxSettings_v0"
+              "tableName": "[parameters('DataSet')]"
             },
             "external": true
             }
