@@ -422,8 +422,8 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat(variables('dataFactoryName'), '/datasets/Office365DataSet')]",
-              "[concat(variables('dataFactoryName'), '/datasets/BinarySink')]",
+              "Office365DataSet",
+              "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
