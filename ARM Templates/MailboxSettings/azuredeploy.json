@@ -41,11 +41,7 @@
     "inputDatasetName": "O365Dataset",
     "outputDatasetName": "StorageOutputDataset",
     "pipelineName": "M365 Simple Pipeline",
-    "triggerName": "Daily Trigger",
-    "outputDataLakeStore": {
-      "filePath": "mgdccontainer"
-    },
-    "allowedGroups": []
+    "triggerName": "Daily Trigger"
   },
   "resources": [
     {
