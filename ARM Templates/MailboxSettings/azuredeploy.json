@@ -273,7 +273,7 @@
                 }
             },
             "dependsOn": [
-              "[concat(variables('dataFactoryName'), '/linkedServices/Office365Service')]",
+              "Office365Service",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
