@@ -231,7 +231,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('dataFactoryName'), '/linkedServices/ADLSSink')]",
+                "ADLSSink",
                 "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ]
         },
