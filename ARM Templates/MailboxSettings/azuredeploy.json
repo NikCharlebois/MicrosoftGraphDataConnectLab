@@ -36,7 +36,6 @@
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('astore', uniqueString(resourceGroup().id))]",
-    "triggerName": "Daily Trigger"
   },
   "resources": [
     {
@@ -615,15 +614,6 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.CalendarView_v0')]"
         }
       ]
-    },
-    {
-      "type": "Microsoft.DataFactory/factories/triggers/status",
-      "name": "[concat(variables('dataFactoryName'), '/', variables('triggerName'), '/start')]",
-      "apiVersion": "2018-06-01",
-      "dependsOn": [
-        "[concat('Microsoft.DataFactory/factories/', variables('dataFactoryName'), '/triggers/', variables('triggerName'))]"
-      ],
-      "properties": {}
     }
   ]
 }
