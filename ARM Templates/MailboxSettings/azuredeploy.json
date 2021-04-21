@@ -216,7 +216,9 @@
                     }
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+              "[variables('dataFactoryName')]"
+            ]
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/BinarySink')]",
