@@ -226,7 +226,7 @@
                 "typeProperties": {
                     "location": {
                         "type": "AzureBlobFSLocation",
-                        "folderPath": "messages"
+                        "fileSystem": "datasets"
                     }
                 }
             },
