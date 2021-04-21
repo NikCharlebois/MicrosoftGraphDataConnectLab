@@ -50,9 +50,7 @@
         "timeout": "PT30M",
         "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D",
-        "dependsOn": [
-            "[resourceId('Microsoft.Resources/deploymentScript', 'GraphChangeTracking')]"
-        ]
+        "dependsOn": []
       }
     },
     {
