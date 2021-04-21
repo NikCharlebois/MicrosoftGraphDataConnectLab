@@ -199,7 +199,7 @@
                 "typeProperties": {
                     "url": "[concat('https://', variables('destinationAdlsAccountName'), '.dfs.core.windows.net/')]",
                     "tenant": "[subscription().tenantId]",
-                    "servicePrincipalId": "[reference('ApplicationScript').outputs.PrincipalId]",
+                    "servicePrincipalId": "[parameters('AppId')]",
                     "servicePrincipalCredentialType": "ServicePrincipalKey",
                     "servicePrincipalCredential": {
                         "type": "SecureString",
@@ -208,7 +208,8 @@
                 }
             },
             "dependsOn": [
-              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]",
+              "[resourceId('Microsoft.Resources/deploymentScripts', 'ApplicationScript')]"
             ]
         },
         {
@@ -244,7 +245,7 @@
             "typeProperties": {
               "office365TenantId": "[subscription().tenantId]",
               "servicePrincipalTenantId": "[subscription().tenantId]",
-              "servicePrincipalId": "[reference('ApplicationScript').outputs.PrincipalId]",
+              "servicePrincipalId": "[parameters('AppId')]",
               "servicePrincipalKey": {
                 "type": "SecureString",
                 "value": "[parameters('AppSecret')]"
