@@ -76,6 +76,9 @@
         "apiVersion": "2021-01-01",
         "name": "[variables('destinationAdlsAccountName')]",
         "location": "East US 2",
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deploymentScripts', 'ApplicationScript')]"
+        ],
         "sku": {
             "name": "Standard_RAGRS",
             "tier": "Standard"
@@ -198,147 +201,237 @@
           ]
         },
         {
-          "type": "linkedservices",
-          "name": "[variables('sourceLinkedServiceName')]",
-          "comments": "Creates the link to O365 which is used as the source of the data extraction. Using service principal supplied by the source ADLS owner.",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "AzureSelfHosted"
-          ],
-          "location": "East US 2",
-          "apiVersion": "2018-06-01",
-          "properties": {
-            "type": "Office365",
-            "connectVia": {
-                "referenceName": "AzureSelfHosted",
-                "type": "IntegrationRuntimeReference"
-            },
-            "description": "Source O365 linked service",
-            "typeProperties": {
-              "office365tenantId": "[subscription().tenantId]",
-              "PrivacyPolicyUri": "http://www.wkw.com/privacy",
-              "TermsOfUseUri": "http://www.wkw.com/tos",
-              "servicePrincipalId": "[parameters('AppId')]",
-              "servicePrincipalKey": {
-                "type": "SecureString",
-                "value": "[parameters('AppSecret')]"
-              },
-              "servicePrincipalTenantId": "[subscription().tenantId]",
-              "allowedGroups": "[variables('allowedGroups')]"
-            }
-          }
-        },
-        {
-          "type": "linkedservices",
-          "name": "[variables('destinationLinkedServiceName')]",
-          "comments": "Creates the link to the newly created destination ADLS, using service principal supplied by the customer deploying this template.",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('destinationAdlsAccountName'), 'default')]",
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('destinationAdlsAccountName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('destinationAdlsAccountName'), 'default', 'mgdccontainer')]",
-            "[resourceId('Microsoft.DataFactory/factories/integrationRuntimes', variables('dataFactoryName'), 'AzureSelfHosted')]"
-          ],
-          "apiVersion": "2018-06-01",
-          "properties": {
-            "type": "AzureBlobStorage",
-            "description": "Destination Azure Data Lake Store linked service",
-            "typeProperties": {
-              "serviceEndpoint": "[concat('https://', variables('destinationAdlsAccountName'), '.blob.core.windows.net/')]",
-			        "servicePrincipalId": "[parameters('AppId')]",
-              "servicePrincipalKey": {
-                "type": "SecureString",
-                "value": "[parameters('AppSecret')]"
-              },
-              "tenant": "[subscription().tenantId]",
-              "resourceGroupName": "[resourceGroup().name]",
-              "subscriptionId": "[subscription().subscriptionId]"
-            }
-          }
-        },
-        
-        {
-          "type": "datasets",
-          "name": "[variables('inputDatasetName')]",
-          "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]"
-          ],
-          "condition":"[equals(parameters('DataSet'),'BasicDataSet_v0.MailboxSettings_v0')]",
-          "apiVersion": "2018-06-01",
-          "properties": {
-            "published": false,
-            "type": "Office365Table",
-            "linkedServiceName": {
-              "referenceName": "[variables('sourceLinkedServiceName')]",
-              "type": "LinkedServiceReference"
-            },
-            "typeProperties": {
-              "tableName": "[parameters('DataSet')]"
-            },
-            "external": true
-            }
-          },
-          {
-            "type": "datasets",
-            "name": "[variables('outputDatasetName')]",
-            "dependsOn": [
-              "[variables('dataFactoryName')]",
-              "[variables('destinationLinkedServiceName')]"
-            ],
+            "name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
-              "published": false,
-              "type": "AzureBlobFSFile",
-              "linkedServiceName": {
-                "referenceName": "[variables('destinationLinkedServiceName')]",
-                "type": "LinkedServiceReference"
-              },
-              "typeProperties": {
-                "folderPath": "[variables('outputDataLakeStore').filePath]"
+                "annotations": [],
+                "type": "AzureBlobFS",
+                "typeProperties": {
+                    "url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+                    "tenant": "[parameters('AzureDataLakeStorage1_properties_typeProperties_tenant')]",
+                    "servicePrincipalId": "[parameters('AzureDataLakeStorage1_properties_typeProperties_servicePrincipalId')]",
+                    "servicePrincipalCredentialType": "ServicePrincipalKey",
+                    "servicePrincipalCredential": {
+                        "type": "SecureString",
+                        "value": "[parameters('AzureDataLakeStorage1_servicePrincipalCredential')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/BinarySink')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "AzureDataLakeStorage1",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Binary",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "folderPath": "messages",
+                        "fileSystem": "datasets"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('dataFactoryName'), '/linkedServices/AzureDataLakeStorage1')]"
+            ]
+        },
+        {
+          "name": "[concat(variables('dataFactoryName'), '/Office365Service')]",
+          "type": "Microsoft.DataFactory/factories/linkedServices",
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "annotations": [],
+            "type": "Office365",
+            "typeProperties": {
+              "office365TenantId": "027d8585-9664-42ed-ae2a-c9e9fddfda22",
+              "servicePrincipalTenantId": "[subscription().tenantId]",
+              "servicePrincipalId": "[reference('ApplicationScript').outputs.PrincipalId]",
+              "servicePrincipalKey": {
+                "type": "SecureString",
+                "value": "[parameters('AppSecret')]"
               }
             }
           },
-        {
-          "type": "pipelines",
-          "name": "[variables('pipelineName')]",
           "dependsOn": [
-            "[variables('dataFactoryName')]",
-            "[variables('sourceLinkedServiceName')]",
-            "[variables('destinationLinkedServiceName')]",
-            "[variables('inputDatasetName')]",
-            "[variables('outputDatasetName')]"
-          ],
-          "apiVersion": "2018-06-01",
-          "properties": {
-            "activities": [
-              {
-                "name": "Copy Teams Chat Data",
-                "description": "Copy Teams chat data from O365 to Azure Data Lake Store",
-                "type": "Copy",
-                "inputs": [
-                  {
-                    "referenceName": "[variables('inputDatasetName')]",
-                    "type": "DatasetReference"
-                  }
-                ],
-                "outputs": [
-                  {
-                    "referenceName": "[variables('outputDatasetName')]",
-                    "type": "DatasetReference"
-                  }
-                ],
+            "[variables('dataFactoryName')]"
+          ]
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/Office365DataSet')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "Office365Source",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Office365Table",
+                "schema": [],
                 "typeProperties": {
-                  "source": {
-                    "type": "Office365Source"
-                  },
-                  "sink": {
-                    "type": "AzureDataLakeStoreSink"
-                  }
+                    "tableName": "[parameters('DataSet')]"
                 }
-              }
+            },
+            "dependsOn": [
+                "[concat(variables('dataFactoryName'), '/linkedServices/Office365Service')]"
             ]
-          }
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365Data')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "dateFilterColumn": "receivedDateTime",
+                                "startTime": "2021-01-01T00:00:00Z",
+                                "endTime": "2021-04-19T00:00:00Z",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "receivedDateTime"
+                                    },
+                                    {
+                                        "name": "sentDateTime"
+                                    },
+                                    {
+                                        "name": "hasAttachments"
+                                    },
+                                    {
+                                        "name": "internetMessageId"
+                                    },
+                                    {
+                                        "name": "subject"
+                                    },
+                                    {
+                                        "name": "importance"
+                                    },
+                                    {
+                                        "name": "parentFolderId"
+                                    },
+                                    {
+                                        "name": "sender"
+                                    },
+                                    {
+                                        "name": "from"
+                                    },
+                                    {
+                                        "name": "toRecipients"
+                                    },
+                                    {
+                                        "name": "ccRecipients"
+                                    },
+                                    {
+                                        "name": "bccRecipients"
+                                    },
+                                    {
+                                        "name": "replyTo"
+                                    },
+                                    {
+                                        "name": "conversationId"
+                                    },
+                                    {
+                                        "name": "uniqueBody"
+                                    },
+                                    {
+                                        "name": "isDeliveryReceiptRequested"
+                                    },
+                                    {
+                                        "name": "isReadReceiptRequested"
+                                    },
+                                    {
+                                        "name": "isRead"
+                                    },
+                                    {
+                                        "name": "isDraft"
+                                    },
+                                    {
+                                        "name": "webLink"
+                                    },
+                                    {
+                                        "name": "createdDateTime"
+                                    },
+                                    {
+                                        "name": "lastModifiedDateTime"
+                                    },
+                                    {
+                                        "name": "changeKey"
+                                    },
+                                    {
+                                        "name": "categories"
+                                    },
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "attachments"
+                                    },
+                                    {
+                                        "name": "inferenceClassification"
+                                    },
+                                    {
+                                        "name": "flag"
+                                    },
+                                    {
+                                        "name": "internetMessageHeaders"
+                                    },
+                                    {
+                                        "name": "conversationIndex"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+                "[concat(variables('dataFactoryName'), '/datasets/Office365DataSet')]",
+                "[concat(variables('dataFactoryName'), '/datasets/BinarySink')]"
+            ]
         },
         {
           "type": "triggers",
