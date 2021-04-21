@@ -247,7 +247,7 @@
             "annotations": [],
             "type": "Office365",
             "typeProperties": {
-              "office365TenantId": "027d8585-9664-42ed-ae2a-c9e9fddfda22",
+              "office365TenantId": "[subscription().tenantId]",
               "servicePrincipalTenantId": "[subscription().tenantId]",
               "servicePrincipalId": "[reference('ApplicationScript').outputs.PrincipalId]",
               "servicePrincipalKey": {
