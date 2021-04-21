@@ -278,7 +278,7 @@
             ]
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365Data')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataMessages')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -435,7 +435,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Message_v1')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365Data')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
