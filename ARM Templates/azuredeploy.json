@@ -37,7 +37,7 @@
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
     "destinationAdlsAccountName": "[concat('astore', uniqueString(resourceGroup().id))]",
-    "dataSetName": "[split(variables('dataSetName'), ' ')[0]]"
+    "dataSetName": "[split(parameters('DataSet'), ' ')[0]]"
   },
   "resources": [
     {
