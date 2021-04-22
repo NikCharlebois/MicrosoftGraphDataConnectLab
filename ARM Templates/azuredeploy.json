@@ -1874,7 +1874,7 @@
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
             "condition": "[equals(split(variables('dataSetName'), ' ')[0], 'BasicDataSet_v0.TeamChat_v0')]"
-        },
+        }
       ]
     }
   ]
