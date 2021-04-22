@@ -410,7 +410,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -427,7 +427,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -590,7 +590,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -607,7 +607,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -762,7 +762,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -779,7 +779,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -928,7 +928,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -945,7 +945,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1109,7 +1109,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1126,7 +1126,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1185,7 +1185,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1202,7 +1202,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1258,7 +1258,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1275,7 +1275,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1424,7 +1424,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1441,7 +1441,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1578,7 +1578,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1595,7 +1595,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
@@ -1774,7 +1774,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "Office365DataSet",
+                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1791,7 +1791,7 @@
                 "annotations": []
             },
             "dependsOn": [
-              "Office365DataSet",
+              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
