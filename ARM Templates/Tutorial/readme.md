@@ -1,3 +1,0 @@
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FNikCharlebois%2FMicrosoftGraphDataConnectLab%2Fmain%2FARM%20Templates%2FTutorial%2Fazuredeploy.json"><img src="https://camo.githubusercontent.com/bad3d579584bd4996af60a96735a0fdcb9f402933c139cc6c4c4a4577576411f/68747470733a2f2f616b612e6d732f6465706c6f79746f617a757265627574746f6e" alt="Deploy Environment in Azure" /></a>
-
-Deploys a storage account, an Azure Data Factory with Microsoft Graph Data Connect retrieving Messages and an Azure App Service hosting a Web application. This ARM template is used in the promotional Microsoft Graph data connect App deployment process.
