@@ -5,7 +5,7 @@ Deploys an Azure Storage Account and an Azure Data Factory with a Pipeline that 
 ## Parameters
 
 * **App Id:**
-  The Application ID of an Azure Active Directory Application Registration which has been granted the **Application.Read.All** permission.
+  The Application ID of an Azure Active Directory Application Registration. This application doesn't require any API permissions. The solution simply grants its Service Principal access to the location where the exported file will be stored.
 
 * **App Secret:**
   A secret for the Azure Active Directory's Application Registration.
