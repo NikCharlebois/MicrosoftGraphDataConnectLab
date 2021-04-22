@@ -26,6 +26,7 @@
         "BasicDataSet_v0.Manager_v0",
         "BasicDataSet_v0.Message_v1",
         "BasicDataSet_v0.SentItem_v1",
+        "BasicDataSet_v0.TeamChat_v0 (PREVIEW)",
         "BasicDataSet_v0.User_v1"
       ],
       "metadata": {
@@ -35,7 +36,8 @@
   },
   "variables": {
     "dataFactoryName": "[concat('M365-', uniqueString(resourceGroup().id))]",
-    "destinationAdlsAccountName": "[concat('astore', uniqueString(resourceGroup().id))]"
+    "destinationAdlsAccountName": "[concat('astore', uniqueString(resourceGroup().id))]",
+    "dataSetName": "[split(variables('dataSetName'), ' ')[0]]"
   },
   "resources": [
     {
@@ -256,7 +258,7 @@
           ]
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/Office365DataSet', split(parameters('DataSet'), '.')[1])]",
+            "name": "[concat(variables('dataFactoryName'), '/Office365DataSet', split(variables('dataSetName'), '.')[1])]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -268,7 +270,7 @@
                 "type": "Office365Table",
                 "schema": [],
                 "typeProperties": {
-                    "tableName": "[parameters('DataSet')]"
+                    "tableName": "[variables('dataSetName')]"
                 }
             },
             "dependsOn": [
@@ -410,7 +412,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -427,11 +429,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Message_v1')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.Message_v1')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
@@ -590,7 +592,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -607,11 +609,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.CalendarView_v0')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.CalendarView_v0')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataContacts')]",
@@ -762,7 +764,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -779,11 +781,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Contact_v1')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.Contact_v1')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataDirectReport')]",
@@ -928,7 +930,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -945,11 +947,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.DirectReport_v0')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.DirectReport_v0')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataEvents')]",
@@ -1109,7 +1111,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1126,11 +1128,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Event_v1')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.Event_v1')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataMailFolder')]",
@@ -1185,7 +1187,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1202,11 +1204,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailFolder_v0')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.MailFolder_v0')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataMailboxSettings')]",
@@ -1258,7 +1260,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1275,11 +1277,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailboxSettings_v0')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.MailboxSettings_v0')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataManager')]",
@@ -1424,7 +1426,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1441,11 +1443,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Manager_v0')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.Manager_v0')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataSentItem')]",
@@ -1578,7 +1580,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1595,11 +1597,11 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.SentItem_v1')]"
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.SentItem_v1')]"
         },
         {
             "name": "[concat(variables('dataFactoryName'), '/ExportO365DataUsers')]",
@@ -1774,7 +1776,7 @@
                         },
                         "inputs": [
                             {
-                                "referenceName": "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
                                 "type": "DatasetReference",
                                 "parameters": {}
                             }
@@ -1791,12 +1793,88 @@
                 "annotations": []
             },
             "dependsOn": [
-              "[concat('Office365DataSet',split(parameters('DataSet'), '.')[1])]",
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
               "BinarySink",
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
-            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.User_v1')]"
-        }
+            "condition": "[equals(variables('dataSetName'), 'BasicDataSet_v0.User_v1')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataTeamMessages')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "dateFilterColumn": "createdDateTime",
+                                "startTime": "2010-07-01T00:00:00.000Z",
+                                "endTime": "2035-04-21T00:00:00.000Z",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "Importance"
+                                    },
+                                    {
+                                        "name": "From"
+                                    },
+                                    {
+                                        "name": "CreatedDateTime"
+                                    },
+                                    {
+                                        "name": "Id"
+                                    },
+                                    {
+                                        "name": "Attachments"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "[concat('Office365DataSet',split(variables('dataSetName'), '.')[1])]",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(split(variables('dataSetName'), ' ')[0], 'BasicDataSet_v0.TeamChat_v0')]"
+        },
       ]
     }
   ]
