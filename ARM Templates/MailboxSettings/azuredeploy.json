@@ -776,8 +776,7 @@
                         ]
                     }
                 ],
-                "annotations": [],
-                "lastPublishTime": "2021-04-22T00:43:29Z"
+                "annotations": []
             },
             "dependsOn": [
               "Office365DataSet",
@@ -943,8 +942,7 @@
                         ]
                     }
                 ],
-                "annotations": [],
-                "lastPublishTime": "2021-04-22T00:43:29Z"
+                "annotations": []
             },
             "dependsOn": [
               "Office365DataSet",
@@ -1125,7 +1123,7 @@
                         ]
                     }
                 ],
-                "annotations": [],
+                "annotations": []
             },
             "dependsOn": [
               "Office365DataSet",
@@ -1133,6 +1131,671 @@
               "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
             ],
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Event_v1')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "displayName"
+                                    },
+                                    {
+                                        "name": "parentFolderId"
+                                    },
+                                    {
+                                        "name": "childFolderCount"
+                                    },
+                                    {
+                                        "name": "unreadItemCount"
+                                    },
+                                    {
+                                        "name": "totalItemCount"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailFolder_v0')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "archiveFolder"
+                                    },
+                                    {
+                                        "name": "timeZone"
+                                    },
+                                    {
+                                        "name": "automaticRepliesSetting"
+                                    },
+                                    {
+                                        "name": "language"
+                                    },
+                                    {
+                                        "name": "workingHours"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailboxSettings_v0')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "accountEnabled"
+                                    },
+                                    {
+                                        "name": "ageGroup"
+                                    },
+                                    {
+                                        "name": "assignedLicenses"
+                                    },
+                                    {
+                                        "name": "assignedPlans"
+                                    },
+                                    {
+                                        "name": "businessPhones"
+                                    },
+                                    {
+                                        "name": "city"
+                                    },
+                                    {
+                                        "name": "companyName"
+                                    },
+                                    {
+                                        "name": "consentProvidedForMinor"
+                                    },
+                                    {
+                                        "name": "country"
+                                    },
+                                    {
+                                        "name": "createdDateTime"
+                                    },
+                                    {
+                                        "name": "department"
+                                    },
+                                    {
+                                        "name": "displayName"
+                                    },
+                                    {
+                                        "name": "givenName"
+                                    },
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "imAddresses"
+                                    },
+                                    {
+                                        "name": "jobTitle"
+                                    },
+                                    {
+                                        "name": "legalAgeGroupClassification"
+                                    },
+                                    {
+                                        "name": "mail"
+                                    },
+                                    {
+                                        "name": "mailNickname"
+                                    },
+                                    {
+                                        "name": "mobilePhone"
+                                    },
+                                    {
+                                        "name": "officeLocation"
+                                    },
+                                    {
+                                        "name": "onPremisesImmutableId"
+                                    },
+                                    {
+                                        "name": "onPremisesLastSyncDateTime"
+                                    },
+                                    {
+                                        "name": "onPremisesSecurityIdentifier"
+                                    },
+                                    {
+                                        "name": "onPremisesSyncEnabled"
+                                    },
+                                    {
+                                        "name": "passwordPolicies"
+                                    },
+                                    {
+                                        "name": "postalCode"
+                                    },
+                                    {
+                                        "name": "preferredLanguage"
+                                    },
+                                    {
+                                        "name": "provisionedPlans"
+                                    },
+                                    {
+                                        "name": "proxyAddresses"
+                                    },
+                                    {
+                                        "name": "state"
+                                    },
+                                    {
+                                        "name": "streetAddress"
+                                    },
+                                    {
+                                        "name": "surname"
+                                    },
+                                    {
+                                        "name": "usageLocation"
+                                    },
+                                    {
+                                        "name": "userPrincipalName"
+                                    },
+                                    {
+                                        "name": "userType"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Manager_v0')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "dateFilterColumn": "createdDateTime",
+                                "startTime": "2010-01-01T00:00:00.000Z",
+                                "endTime": "2035-01-01T00:00:00.000Z",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "createdDateTime"
+                                    },
+                                    {
+                                        "name": "lastModifiedDateTime"
+                                    },
+                                    {
+                                        "name": "changeKey"
+                                    },
+                                    {
+                                        "name": "categories"
+                                    },
+                                    {
+                                        "name": "receivedDateTime"
+                                    },
+                                    {
+                                        "name": "sentDateTime"
+                                    },
+                                    {
+                                        "name": "hasAttachments"
+                                    },
+                                    {
+                                        "name": "internetMessageId"
+                                    },
+                                    {
+                                        "name": "subject"
+                                    },
+                                    {
+                                        "name": "importance"
+                                    },
+                                    {
+                                        "name": "parentFolderId"
+                                    },
+                                    {
+                                        "name": "sender"
+                                    },
+                                    {
+                                        "name": "from"
+                                    },
+                                    {
+                                        "name": "toRecipients"
+                                    },
+                                    {
+                                        "name": "ccRecipients"
+                                    },
+                                    {
+                                        "name": "bccRecipients"
+                                    },
+                                    {
+                                        "name": "replyTo"
+                                    },
+                                    {
+                                        "name": "conversationId"
+                                    },
+                                    {
+                                        "name": "uniqueBody"
+                                    },
+                                    {
+                                        "name": "isDeliveryReceiptRequested"
+                                    },
+                                    {
+                                        "name": "isReadReceiptRequested"
+                                    },
+                                    {
+                                        "name": "isRead"
+                                    },
+                                    {
+                                        "name": "isDraft"
+                                    },
+                                    {
+                                        "name": "webLink"
+                                    },
+                                    {
+                                        "name": "attachments"
+                                    },
+                                    {
+                                        "name": "inferenceClassification"
+                                    },
+                                    {
+                                        "name": "flag"
+                                    },
+                                    {
+                                        "name": "body"
+                                    },
+                                    {
+                                        "name": "bodyPreview"
+                                    },
+                                    {
+                                        "name": "conversationIndex"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.SentItem_v1')]"
+        },
+        {
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Copy Office 365 Data",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "Office365Source",
+                                "userScopeFilterUri": "",
+                                "outputColumns": [
+                                    {
+                                        "name": "aboutMe"
+                                    },
+                                    {
+                                        "name": "accountEnabled"
+                                    },
+                                    {
+                                        "name": "ageGroup"
+                                    },
+                                    {
+                                        "name": "assignedLicenses"
+                                    },
+                                    {
+                                        "name": "assignedPlans"
+                                    },
+                                    {
+                                        "name": "birthday"
+                                    },
+                                    {
+                                        "name": "businessPhones"
+                                    },
+                                    {
+                                        "name": "city"
+                                    },
+                                    {
+                                        "name": "companyName"
+                                    },
+                                    {
+                                        "name": "consentProvidedForMinor"
+                                    },
+                                    {
+                                        "name": "country"
+                                    },
+                                    {
+                                        "name": "createdDateTime"
+                                    },
+                                    {
+                                        "name": "department"
+                                    },
+                                    {
+                                        "name": "displayName"
+                                    },
+                                    {
+                                        "name": "givenName"
+                                    },
+                                    {
+                                        "name": "hireDate"
+                                    },
+                                    {
+                                        "name": "id"
+                                    },
+                                    {
+                                        "name": "imAddresses"
+                                    },
+                                    {
+                                        "name": "interests"
+                                    },
+                                    {
+                                        "name": "jobTitle"
+                                    },
+                                    {
+                                        "name": "legalAgeGroupClassification"
+                                    },
+                                    {
+                                        "name": "mail"
+                                    },
+                                    {
+                                        "name": "mailNickname"
+                                    },
+                                    {
+                                        "name": "mobilePhone"
+                                    },
+                                    {
+                                        "name": "mySite"
+                                    },
+                                    {
+                                        "name": "officeLocation"
+                                    },
+                                    {
+                                        "name": "onPremisesImmutableId"
+                                    },
+                                    {
+                                        "name": "onPremisesLastSyncDateTime"
+                                    },
+                                    {
+                                        "name": "onPremisesSecurityIdentifier"
+                                    },
+                                    {
+                                        "name": "onPremisesSyncEnabled"
+                                    },
+                                    {
+                                        "name": "passwordPolicies"
+                                    },
+                                    {
+                                        "name": "pastProjects"
+                                    },
+                                    {
+                                        "name": "postalCode"
+                                    },
+                                    {
+                                        "name": "preferredLanguage"
+                                    },
+                                    {
+                                        "name": "preferredName"
+                                    },
+                                    {
+                                        "name": "provisionedPlans"
+                                    },
+                                    {
+                                        "name": "proxyAddresses"
+                                    },
+                                    {
+                                        "name": "responsibilities"
+                                    },
+                                    {
+                                        "name": "schools"
+                                    },
+                                    {
+                                        "name": "skills"
+                                    },
+                                    {
+                                        "name": "state"
+                                    },
+                                    {
+                                        "name": "streetAddress"
+                                    },
+                                    {
+                                        "name": "surname"
+                                    },
+                                    {
+                                        "name": "usageLocation"
+                                    },
+                                    {
+                                        "name": "userPrincipalName"
+                                    },
+                                    {
+                                        "name": "userType"
+                                    }
+                                ]
+                            },
+                            "sink": {
+                                "type": "BinarySink",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSWriteSettings"
+                                }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "Office365DataSet",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "BinarySink",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "annotations": []
+            },
+            "dependsOn": [
+              "Office365DataSet",
+              "BinarySink",
+              "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]"
+            ],
+            "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.User_v1')]"
         }
       ]
     }
