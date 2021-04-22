@@ -1826,19 +1826,19 @@
                                 "userScopeFilterUri": "",
                                 "outputColumns": [
                                     {
-                                        "name": "Importance"
+                                        "name": "importance"
                                     },
                                     {
-                                        "name": "From"
+                                        "name": "from"
                                     },
                                     {
-                                        "name": "CreatedDateTime"
+                                        "name": "createdDateTime"
                                     },
                                     {
-                                        "name": "Id"
+                                        "name": "id"
                                     },
                                     {
-                                        "name": "Attachments"
+                                        "name": "attachments"
                                     }
                                 ]
                             },
