@@ -1133,7 +1133,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Event_v1')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataMailFolder')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -1209,7 +1209,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailFolder_v0')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataMailboxSettings')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -1282,7 +1282,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.MailboxSettings_v0')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataManager')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -1448,7 +1448,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.Manager_v0')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataSentItem')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -1602,7 +1602,7 @@
             "condition": "[equals(parameters('DataSet'), 'BasicDataSet_v0.SentItem_v1')]"
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataCalendarView')]",
+            "name": "[concat(variables('dataFactoryName'), '/ExportO365DataUsers')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
