@@ -256,7 +256,7 @@
           ]
         },
         {
-            "name": "[concat(variables('dataFactoryName'), '/Office365DataSet')]",
+            "name": "[concat(variables('dataFactoryName'), '/Office365DataSet', split(parameters('DataSet'), '.')[1])]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
