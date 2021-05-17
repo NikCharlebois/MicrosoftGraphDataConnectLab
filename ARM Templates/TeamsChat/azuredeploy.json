@@ -26,10 +26,32 @@
     "triggerName": "Daily Trigger",
     "outputDataLakeStore": {
       "filePath": "mgdccontainer"
-    },
-    "servicePrincipalObjectId" : "1b6d4f72-70ba-4911-8e77-682155be4662"
+    }
   },
   "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "ApplicationScript",
+      "location": "[resourceGroup().location]",
+      "kind": "AzurePowerShell",
+      "properties": {
+        "forceUpdateTag": "1",
+        "azPowerShellVersion": "3.0",
+        "environmentVariables": [
+        {
+            "name":"AppSecret",
+            "secureValue": "[parameters('AzureADAppSecret')]"
+          }
+        ],
+        "arguments": "[format(' -AppID {0} -TenantId {1} -AppToGet {2}', parameters('AzureADAppId'), subscription().tenantId, parameters('AzureADAppId'))]",
+        "primaryScriptUri": "https://raw.githubusercontent.com/NikCharlebois/MicrosoftGraphDataConnectLab/main/Utilities/Scripts/GetServicePrincipalId.ps1",
+        "timeout": "PT30M",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D",
+        "dependsOn": []
+      }
+    },
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2020-08-01-preview",
@@ -110,7 +132,7 @@
       "name": "[concat(variables('destinationAdlsAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]",
       "properties": {
         "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-        "principalId": "[variables('servicePrincipalObjectId')]"
+        "principalId": "[reference('ApplicationScript').outputs.PrincipalId]"
       }
     },
     {
@@ -122,7 +144,7 @@
       "name": "[concat(variables('destinationAdlsAccountName'), '/default/mgdccontainer/Microsoft.Authorization/aff0e9ba-b9c8-47a0-8dfa-0faa2c411d7c')]",
       "properties": {
         "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
-        "principalId": "[variables('servicePrincipalObjectId')]"
+        "principalId": "[reference('ApplicationScript').outputs.PrincipalId]"
       }
     },{
       "name": "[variables('dataFactoryName')]",
